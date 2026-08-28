@@ -1,3 +1,6 @@
+#include <stdint.h>
+#include "port.h"
+
 char *memory = (char*) 0xB8000;
 int cursor_row = 0;
 int cursor_col = 0;
