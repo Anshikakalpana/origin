@@ -1,4 +1,3 @@
-
 MBALIGN  equ  1<<0              ; modules ko page-align karo
 MEMINFO  equ  1<<1               ; memory map GRUB se maango
 MBFLAGS  equ  MBALIGN | MEMINFO  ; dono flags combine karo
