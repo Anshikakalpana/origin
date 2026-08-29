@@ -1,5 +1,6 @@
 #include <stdint.h>
 #include "port.h"
+#include "idt.h"
 
 char *memory = (char*) 0xB8000;
 int cursor_row = 0;
@@ -29,25 +30,26 @@ void print(char *message) {
     }
 }
 
+// initialize the programmable interrupt controller (pic)
 
-void kernel_main(void) {
-    print("Hello m OS! \n heyy its me");
-    print(" This is a test.");
+// The pic manages interrupt requests from hardware devices
+// and forwards them to the cpu
 
-    while (1) { }
-}
+// multiple devices may request the cpu's attention at the same time.
+// The pic handles these requests, including masking and priority,
+// and delivers the corresponding interrupt to the cpu
 
-// function to initialize pic (programmable interrupt controller)
-// in simple words pic is a way for kwyboard to talk with other hardwares
-// now the question is how do they actually talk?
-// not every device is connected to cpu as it could increase the load on cpu
-// keyboard is connected to pic , all the hardwares are connected to pic and pic is connected to cpu
-// keyboard -> pic -> cpu
+// simplified interrupt path:
+
+// keyboard -IRQ1 -> master pic -> cpu
+// timer     -IRQ0 -> master pic -> cpu
+// disk     -IRQ14 -> slave pic -> master pic -> cpu
 
 
 void pic_init() {
+   
     outb(0x20, 0x11);
-    outb(0xA0, 0x11);
+    outb(0xA0, 0x11); 
 
     outb(0x21, 0x20);
     outb(0xA1, 0x28);
@@ -58,6 +60,17 @@ void pic_init() {
     outb(0x21, 0x01);
     outb(0xA1, 0x01);
 
-    outb(0x21, 0x00);
-    outb(0xA1, 0x00);
+    outb(0x21, 0xFD);  
+    outb(0xA1, 0xFF);  
+}
+
+void kernel_main(void) {
+    print("Hello m OS! \n heyy its me");
+    print(" This is a test.");
+
+    pic_init();
+    idt_init();
+    asm volatile("sti");
+
+    while (1) { }
 }
