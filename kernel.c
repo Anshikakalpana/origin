@@ -36,3 +36,28 @@ void kernel_main(void) {
 
     while (1) { }
 }
+
+// function to initialize pic (programmable interrupt controller)
+// in simple words pic is a way for kwyboard to talk with other hardwares
+// now the question is how do they actually talk?
+// not every device is connected to cpu as it could increase the load on cpu
+// keyboard is connected to pic , all the hardwares are connected to pic and pic is connected to cpu
+// keyboard -> pic -> cpu
+
+
+void pic_init() {
+    outb(0x20, 0x11);
+    outb(0xA0, 0x11);
+
+    outb(0x21, 0x20);
+    outb(0xA1, 0x28);
+
+    outb(0x21, 0x04);
+    outb(0xA1, 0x02);
+
+    outb(0x21, 0x01);
+    outb(0xA1, 0x01);
+
+    outb(0x21, 0x00);
+    outb(0xA1, 0x00);
+}
