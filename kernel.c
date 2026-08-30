@@ -11,7 +11,7 @@ void new_line(){
     cursor_col = 0;
 }
 
-void clear(){
+void backspace(){
     if (cursor_col > 0) {
         cursor_col--;
         int index = (cursor_row * 80 + cursor_col) * 2;
