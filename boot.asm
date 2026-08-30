@@ -1,8 +1,8 @@
-MBALIGN  equ  1<<0              ; modules ko page-align karo
-MEMINFO  equ  1<<1               ; memory map GRUB se maango
-MBFLAGS  equ  MBALIGN | MEMINFO  ; dono flags combine karo
-MAGIC    equ  0x1BADB002         ; GRUB yahi number dhoondta hai
-CHECKSUM equ -(MAGIC + MBFLAGS)  ; in teeno ka sum zero aana chahiye
+MBALIGN  equ  1<<0              ; 
+MEMINFO  equ  1<<1               ; 
+MBFLAGS  equ  MBALIGN | MEMINFO  ; 
+MAGIC    equ  0x1BADB002         ; 
+CHECKSUM equ -(MAGIC + MBFLAGS)  ; 
 
 section .multiboot
 align 4
@@ -13,16 +13,16 @@ align 4
 section .bss
 align 16
 stack_bottom:
-    resb 16384                   ; 16 KB stack reserve karo
+    resb 16384                   ; 
 stack_top:
 
 section .text
 global _start
 _start:
-    mov esp, stack_top           ; stack pointer ko set karo
+    mov esp, stack_top           ; 
 
     extern kernel_main
-    call kernel_main              ; C kernel ko call karo
+    call kernel_main              ; 
 
     cli
 .hang:

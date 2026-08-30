@@ -11,6 +11,15 @@ void new_line(){
     cursor_col = 0;
 }
 
+void clear(){
+    if (cursor_col > 0) {
+        cursor_col--;
+        int index = (cursor_row * 80 + cursor_col) * 2;
+        memory[index] = ' ';
+        memory[index + 1] = 0x07;
+    }
+}
+
 void print(char *message) {
     for (int i = 0; message[i] != '\0'; ++i) {
 
