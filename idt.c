@@ -1,6 +1,8 @@
 #include "idt.h"
 #include "isr.h"
 
+//in the classic x86 protected-mode/32-bit interrupt architecture, there are 256 possible interrupt vectors
+// so we make an array (idt_entry) of size 256
 struct idt_entry idt[256];
 
 struct idt_ptr {

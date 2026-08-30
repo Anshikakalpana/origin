@@ -1,4 +1,4 @@
-// idt is a table/array which saves details( what function to run for that particular interrupt) of  every interrupt
+// idt is a table/array which stores information about the handler function to execute for each interrupt vector
 // ifndef is a keyword saying if not defined then run the next line which is define
 
 
@@ -7,7 +7,7 @@
 
 #include <stdint.h>
 
-//this is how information is stored in table/array for that particular interrupt
+// this is how information is stored in table/array for that particular interrupt
 struct idt_entry {
     // address is of 32 bits but hardware doesnt allow to save 32 bits for an address so we save it in 2 halves, one is lower half( which saves least significant 16 bits ) other is higher( which saves most significant 16 bits )
     uint16_t address_low;
