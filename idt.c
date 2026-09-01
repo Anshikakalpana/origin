@@ -2,17 +2,17 @@
 #include "isr.h"
 
 //in the classic x86 protected-mode/32-bit interrupt architecture, there are 256 possible interrupt vectors
-// so we make an array (idt_entry) of size 256
-struct idt_entry idt[256];
+// so we make an array (interrupt_table_entry) of size 256
+struct interrupt_table_entry idt[256];
 
-struct idt_ptr {
+struct interrupt_table_ptr {
     uint16_t limit;
     uint32_t base;
 } __attribute__((packed));
 
-struct idt_ptr idtp;
+struct interrupt_table_ptr idtp;
 
-void idt_set_gate(int n, uint32_t handler) {
+void interrupt_table_set_gate(int n, uint32_t handler) {
     idt[n].address_low = handler & 0xFFFF;
     idt[n].selector = 0x10;
     idt[n].zero = 0;
@@ -21,12 +21,12 @@ void idt_set_gate(int n, uint32_t handler) {
 }
 
 
-void idt_init() {
+void interrupt_table_init() {
     for (int i = 0; i < 256; i++) {
-        idt_set_gate(i, 0);
+        interrupt_table_set_gate(i, 0);
     }
-    idt_set_gate(33, (uint32_t) keyboard_handler);
-    idtp.limit = (sizeof(struct idt_entry) * 256) - 1;
+    interrupt_table_set_gate(33, (uint32_t) keyboard_handler);
+    idtp.limit = (sizeof(struct interrupt_table_entry) * 256) - 1;
     idtp.base = (uint32_t) &idt;
 
     asm volatile("lidt %0" : : "m" (idtp));

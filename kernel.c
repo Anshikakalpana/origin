@@ -1,7 +1,7 @@
 #include <stdint.h>
 #include "port.h"
 #include "idt.h"
-
+#include "paging.h"
 char *memory = (char*) 0xB8000;
 int cursor_row = 0;
 int cursor_col = 0;
@@ -79,6 +79,7 @@ void kernel_main(void) {
 
     pic_init();
     idt_init();
+    paging_init();
     asm volatile("sti");
 
     while (1) { }
