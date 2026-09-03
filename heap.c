@@ -1,8 +1,11 @@
-#include "heap.h";
+#include "heap.h"
+#include "physical_memory_manager.h"
+
+struct memory_block *head=0;
 
 int kmalloc(int size){
     struct memory_block *temp= head;
-    struct memory_block *temp= 0;
+    struct memory_block *last= 0;
     while(temp!=0){
     if(temp->free && temp->size>= size){
         temp->free = 0;
@@ -13,7 +16,7 @@ int kmalloc(int size){
     
     int new_page= alloc_page();
 
-    if(!new_page ==-1)return -1;
+    if(new_page ==-1)return -1;
 
     struct memory_block *new_memory_block= struct (memory_block *) (new_page * 4096);
     new_memory_block->size= 4096-sizeof(memory_block);
@@ -30,4 +33,9 @@ int kmalloc(int size){
 
 
  }
+}
+
+void kfree(int ptr) {
+    struct block *b = ((struct block *) ptr) - 1;
+    b->free = 1;
 }

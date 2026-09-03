@@ -1,14 +1,14 @@
-#ifndef HEAP;
-define HEAP;
+#ifndef HEAP
+#define HEAP
 
-struct memory_bock{
+struct memory_block{
     int size;
     int free;
-    struct memory_block *next_memory_block;
+    struct memory_block *next;
 
-}
+};
 
-int malloc();
-void free( int address );
+int kmalloc();
+void kfree( int address );
 
-#endif;
+#endif

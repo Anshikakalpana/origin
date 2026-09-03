@@ -2,7 +2,8 @@
 #include "port.h"
 #include "idt.h"
 #include "paging.h"
-#include "physical_memory_allocator.h"
+#include "physical_memory_manager.h"
+#include "heap.h"
 
 char *memory = (char*) 0xB8000;
 int cursor_row = 0;
@@ -82,7 +83,15 @@ void kernel_main(void) {
     pic_init();
     idt_init();
     paging_init();
-    alloc_page();
+    int ptr1 = kmalloc(50);
+kfree(ptr1);
+int ptr2 = kmalloc(50);
+
+if (ptr1 == ptr2) {
+    print("\nHeap reuse working!\n");
+} else {
+    print("\nHeap issue!\n");
+}
     asm volatile("sti");
 
     while (1) { }
