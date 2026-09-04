@@ -26,6 +26,6 @@ struct interrupt_table_entry {
     
 } __attribute__((packed));
 
-void idt_init();
+void interrupt_table_init();
 
 #endif

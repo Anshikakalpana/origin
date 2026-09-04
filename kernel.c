@@ -108,7 +108,7 @@ void kernel_main(void) {
     print(" This is a test.");
 
     pic_init();
-    idt_init();
+    interrupt_table_init();
     paging_init();
     pit_init(); 
 

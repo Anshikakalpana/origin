@@ -7,7 +7,7 @@ extern void print_number(uint32_t num);
 
 volatile uint32_t tick_count = 0;
 
-void timer_handler() {
+void timer_handler_main() {
     tick_count++;
 
     if(tick_count%1000==0){
