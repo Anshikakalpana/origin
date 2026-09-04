@@ -4,7 +4,7 @@
 uint32_t bitmap[32];
 
 int alloc_page() {
-    for (int i = 0; i < 1024; i++) {
+    for (int i = 1; i < 1024; i++) {
         int index = i / 32;
         int offset = i % 32;
 

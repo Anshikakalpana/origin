@@ -8,7 +8,7 @@ struct memory_block{
 
 };
 
-int kmalloc();
+int kmalloc(int size);
 void kfree( int address );
 
 #endif

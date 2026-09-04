@@ -3,3 +3,5 @@
 
 int alloc_page();
 void free_page(int page_number);
+
+#endif

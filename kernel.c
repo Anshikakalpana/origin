@@ -5,6 +5,8 @@
 #include "physical_memory_manager.h"
 #include "heap.h"
 
+extern struct memory_block *head;
+
 char *memory = (char*) 0xB8000;
 int cursor_row = 0;
 int cursor_col = 0;
@@ -83,7 +85,8 @@ void kernel_main(void) {
     pic_init();
     idt_init();
     paging_init();
-    int ptr1 = kmalloc(50);
+
+int ptr1 = kmalloc(50);
 kfree(ptr1);
 int ptr2 = kmalloc(50);
 
@@ -96,3 +99,4 @@ if (ptr1 == ptr2) {
 
     while (1) { }
 }
+
