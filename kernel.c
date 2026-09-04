@@ -4,8 +4,10 @@
 #include "paging.h"
 #include "physical_memory_manager.h"
 #include "heap.h"
+#include "pit.h"
 
 extern struct memory_block *head;
+extern volatile uint32_t tick_count;
 
 char *memory = (char*) 0xB8000;
 int cursor_row = 0;
@@ -44,6 +46,29 @@ void print(char *message) {
     }
 }
 
+void print_number(uint32_t number){
+
+    if (number == 0) {
+        print("0");
+        return;
+    }
+    
+    char buffer[11];
+    int x = 0;
+    while (number > 0) {
+        int remainder = number % 10;
+        buffer[x] = '0' + remainder;
+        number = number / 10;
+        x++;
+    }
+
+    for (int i = x - 1; i >= 0; i--) {
+        char single_char[2] = {buffer[i], '\0'};
+        print(single_char);
+    }
+}
+
+
 // initialize the programmable interrupt controller (pic)
 
 // The pic manages interrupt requests from hardware devices
@@ -74,7 +99,7 @@ void pic_init() {
     outb(0x21, 0x01);
     outb(0xA1, 0x01);
 
-    outb(0x21, 0xFD);  
+    outb(0x21, 0xFC);  
     outb(0xA1, 0xFF);  
 }
 
@@ -85,17 +110,12 @@ void kernel_main(void) {
     pic_init();
     idt_init();
     paging_init();
+    pit_init(); 
 
-int ptr1 = kmalloc(50);
-kfree(ptr1);
-int ptr2 = kmalloc(50);
-
-if (ptr1 == ptr2) {
-    print("\nHeap reuse working!\n");
-} else {
-    print("\nHeap issue!\n");
-}
     asm volatile("sti");
+
+    print("\nTicks: ");
+    print_number(tick_count);
 
     while (1) { }
 }
