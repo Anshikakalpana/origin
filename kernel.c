@@ -5,9 +5,11 @@
 #include "physical_memory_manager.h"
 #include "heap.h"
 #include "pit.h"
+#include "task.h"
 
 extern struct memory_block *head;
 extern volatile uint32_t tick_count;
+extern struct task_manager *current_task;
 
 char *memory = (char*) 0xB8000;
 int cursor_row = 0;
@@ -104,6 +106,9 @@ void pic_init() {
 }
 
 void kernel_main(void) {
+
+
+
     print("Hello m OS! \n heyy its me");
     print(" This is a test.");
 
@@ -111,6 +116,38 @@ void kernel_main(void) {
     interrupt_table_init();
     paging_init();
     pit_init(); 
+uint32_t test_stack[1024];
+
+void debug_task_setup() {
+    uint32_t stack_top = (uint32_t)(test_stack + 1024);
+
+    stack_top -= 4;
+    *((uint32_t *) stack_top) = 0;
+    stack_top -= 4;
+    *((uint32_t *) stack_top) = 0;
+    stack_top -= 4;
+    *((uint32_t *) stack_top) = 0;
+    stack_top -= 4;
+    *((uint32_t *) stack_top) = 0;
+    stack_top -= 4;
+    *((uint32_t *) stack_top) = 0;
+    stack_top -= 4;
+    *((uint32_t *) stack_top) = 0;
+    stack_top -= 4;
+    *((uint32_t *) stack_top) = 0;
+    stack_top -= 4;
+    *((uint32_t *) stack_top) = 0;
+    stack_top -= 4;
+    *((uint32_t *) stack_top) = (uint32_t) task_one;
+
+    struct task_manager t;
+    t.stack_pointer = stack_top;
+    t.next = &t;
+
+    current_task = &t;
+
+    switch_task();
+}
 
     asm volatile("sti");
 
