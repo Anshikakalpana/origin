@@ -1,6 +1,7 @@
 #include "idt.h"
 #include "isr.h"
 #include "timer.h"
+#include "exceptions.h"
 
 //in the classic x86 protected-mode/32-bit interrupt architecture, there are 256 possible interrupt vectors
 // so we make an array (interrupt_table_entry) of size 256
@@ -26,7 +27,7 @@ void interrupt_table_init() {
     for (int i = 0; i < 256; i++) {
         interrupt_table_set_gate(i, 0);
     }
-
+    interrupt_table_set_gate(0, (uint32_t) exception0_handler);
     interrupt_table_set_gate(32, (uint32_t) timer_handler);
     interrupt_table_set_gate(33, (uint32_t) keyboard_handler);
     idtp.limit = (sizeof(struct interrupt_table_entry) * 256) - 1;

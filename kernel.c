@@ -5,11 +5,10 @@
 #include "physical_memory_manager.h"
 #include "heap.h"
 #include "pit.h"
-#include "task.h"
+#include "exceptions.h"
 
 extern struct memory_block *head;
 extern volatile uint32_t tick_count;
-extern struct task_manager *current_task;
 
 char *memory = (char*) 0xB8000;
 int cursor_row = 0;
@@ -18,6 +17,10 @@ int cursor_col = 0;
 void new_line(){
     cursor_row++;
     cursor_col = 0;
+
+    if (cursor_row >= 25) {
+        cursor_row = 0;
+    }
 }
 
 void backspace(){
@@ -31,16 +34,13 @@ void backspace(){
 
 void print(char *message) {
     for (int i = 0; message[i] != '\0'; ++i) {
-
         if(message[i]=='\n' ){
             new_line();
             continue;
         }
-
         if (cursor_col >= 80) {
             new_line();
         }
-
         int index = (cursor_row * 80 + cursor_col) * 2;
         memory[index] = message[i];
         memory[index + 1] = 0x07;
@@ -49,12 +49,10 @@ void print(char *message) {
 }
 
 void print_number(uint32_t number){
-
     if (number == 0) {
         print("0");
         return;
     }
-    
     char buffer[11];
     int x = 0;
     while (number > 0) {
@@ -63,52 +61,40 @@ void print_number(uint32_t number){
         number = number / 10;
         x++;
     }
-
     for (int i = x - 1; i >= 0; i--) {
         char single_char[2] = {buffer[i], '\0'};
         print(single_char);
     }
 }
 
-
-// initialize the programmable interrupt controller (pic)
-
-// The pic manages interrupt requests from hardware devices
-// and forwards them to the cpu
-
-// multiple devices may request the cpu's attention at the same time.
-// The pic handles these requests, including masking and priority,
-// and delivers the corresponding interrupt to the cpu
-
-// simplified interrupt path:
-
-// keyboard -IRQ1 -> master pic -> cpu
-// timer     -IRQ0 -> master pic -> cpu
-// disk     -IRQ14 -> slave pic -> master pic -> cpu
-
-
 void pic_init() {
-   
     outb(0x20, 0x11);
     outb(0xA0, 0x11); 
-
     outb(0x21, 0x20);
     outb(0xA1, 0x28);
-
     outb(0x21, 0x04);
     outb(0xA1, 0x02);
-
     outb(0x21, 0x01);
     outb(0xA1, 0x01);
-
     outb(0x21, 0xFC);  
     outb(0xA1, 0xFF);  
 }
 
+/*
+void task_one() {
+    while (1) {
+        print("A");
+    }
+}
+
+void task_two() {
+    while (1) {
+        print("B");
+    }
+}
+*/
+
 void kernel_main(void) {
-
-
-
     print("Hello m OS! \n heyy its me");
     print(" This is a test.");
 
@@ -116,44 +102,21 @@ void kernel_main(void) {
     interrupt_table_init();
     paging_init();
     pit_init(); 
-uint32_t test_stack[1024];
 
-void debug_task_setup() {
-    uint32_t stack_top = (uint32_t)(test_stack + 1024);
-
-    stack_top -= 4;
-    *((uint32_t *) stack_top) = 0;
-    stack_top -= 4;
-    *((uint32_t *) stack_top) = 0;
-    stack_top -= 4;
-    *((uint32_t *) stack_top) = 0;
-    stack_top -= 4;
-    *((uint32_t *) stack_top) = 0;
-    stack_top -= 4;
-    *((uint32_t *) stack_top) = 0;
-    stack_top -= 4;
-    *((uint32_t *) stack_top) = 0;
-    stack_top -= 4;
-    *((uint32_t *) stack_top) = 0;
-    stack_top -= 4;
-    *((uint32_t *) stack_top) = 0;
-    stack_top -= 4;
-    *((uint32_t *) stack_top) = (uint32_t) task_one;
-
-    struct task_manager t;
-    t.stack_pointer = stack_top;
-    t.next = &t;
-
-    current_task = &t;
-
-    switch_task();
-}
+    /*
+    task_init(task_one);
+    task_init(task_two);
+    start_first_task();
+    */
 
     asm volatile("sti");
+volatile int b = 0;
+int a = 5;
+int result = a / b;
+print_number(result);
 
     print("\nTicks: ");
     print_number(tick_count);
 
     while (1) { }
 }
-

@@ -19,18 +19,32 @@ timer_handler:
 global switch_task
 extern current_task
 extern schedule
-extern current_task
 
 switch_task:
     pusha
-
     mov eax, [current_task]
     mov [eax], esp
-
     call schedule
-
     mov eax, [current_task]
     mov esp, [eax]
-
     popa
     ret
+
+global start_first_task
+
+start_first_task:
+    mov eax, [current_task]
+    mov esp, [eax]
+    popa
+    ret
+
+global exception0_handler
+extern exception_handler_main
+
+exception0_handler:
+    pusha
+    push dword 0
+    call exception_handler_main
+    add esp, 4
+    popa
+    iret
