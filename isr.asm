@@ -48,3 +48,53 @@ exception0_handler:
     add esp, 4
     popa
     iret
+
+global exception4_handler
+
+exception4_handler:
+    pusha
+    push dword 4
+    call exception_handler_main
+    add esp, 4
+    popa
+    iret
+
+global exception5_handler
+
+exception5_handler:
+    pusha
+    push dword 5
+    call exception_handler_main
+    add esp, 4
+    popa
+    iret
+
+global exception6_handler
+
+exception6_handler:
+    pusha
+    push dword 6
+    call exception_handler_main
+    add esp, 4
+    popa
+    iret
+
+global exception13_handler
+
+exception13_handler:
+    pusha
+    push dword 13
+    call exception_handler_main
+    add esp, 4
+    popa
+    iret
+
+global exception14_handler
+
+exception14_handler:
+    pusha
+    push dword 14
+    call exception_handler_main
+    add esp, 4
+    popa
+    iret

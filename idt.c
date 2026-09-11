@@ -28,6 +28,11 @@ void interrupt_table_init() {
         interrupt_table_set_gate(i, 0);
     }
     interrupt_table_set_gate(0, (uint32_t) exception0_handler);
+    interrupt_table_set_gate(4, (uint32_t) exception4_handler);
+    interrupt_table_set_gate(5, (uint32_t) exception5_handler); 
+    interrupt_table_set_gate(6, (uint32_t) exception6_handler);
+    interrupt_table_set_gate(13, (uint32_t) exception13_handler);
+    interrupt_table_set_gate(14, (uint32_t) exception14_handler); 
     interrupt_table_set_gate(32, (uint32_t) timer_handler);
     interrupt_table_set_gate(33, (uint32_t) keyboard_handler);
     idtp.limit = (sizeof(struct interrupt_table_entry) * 256) - 1;
