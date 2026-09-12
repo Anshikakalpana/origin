@@ -38,6 +38,8 @@ start_first_task:
     popa
     ret
 
+; exception handling
+
 global exception0_handler
 extern exception_handler_main
 
@@ -96,5 +98,15 @@ exception14_handler:
     push dword 14
     call exception_handler_main
     add esp, 4
+    popa
+    iret
+
+; system call handling
+global system_call_handler
+extern system_call_handler_main
+
+system_call_handler:
+    pusha
+    call system_call_handler_main
     popa
     iret

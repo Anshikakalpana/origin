@@ -110,13 +110,10 @@ void kernel_main(void) {
     */
 
     asm volatile("sti");
-volatile int b = 0;
-int a = 5;
-int result = a / b;
-print_number(result);
 
     print("\nTicks: ");
     print_number(tick_count);
+
 
     while (1) { }
 }
